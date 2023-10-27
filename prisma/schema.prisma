@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Age {
+  BABY
+  YOUNG
+  ADULT
+  SENIOR
+}
+
+enum Size {
+  SMALL
+  MEDIUM
+  LARGE
+  XLARGE
+}
+
+enum EnergyLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum IndependenceLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum EnvironmentType {
+  LARGE
+  SMALL
+  VERY_SMALL
+}
+
+enum UserType {
+  ORG
+  USER
+}
+
+model Pet {
+  id                 String             @id @default(uuid())
+  name               String
+  description        String
+  age                Age?
+  size               Size?
+  energyLevel        EnergyLevel?
+  independenceLevel  IndependenceLevel?
+  environmentType    EnvironmentType?
+  address            String
+  images             PetImage[]
+  orgId              String
+  active             Boolean            @default(true)
+  org                User               @relation(fields: [orgId], references: [id])
+  adoptationRequests AdoptionRequet[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+}
+
+model PetImage {
+  id        String   @id @default(uuid())
+  url       String
+  petId     String
+  pet       Pet      @relation(fields: [petId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdoptionRequet {
+  id        String   @id @default(uuid())
+  request   String
+  petId     String
+  pet       Pet      @relation(fields: [petId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  address   String
+  phone     String
+  email     String
+  type      UserType
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pets      Pet[]
+}
