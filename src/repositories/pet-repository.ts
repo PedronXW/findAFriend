@@ -1,11 +1,19 @@
-import { Pet, Prisma } from '@prisma/client'
+import {
+  Age,
+  EnergyLevel,
+  EnvironmentType,
+  IndependenceLevel,
+  Pet,
+  Prisma,
+  Size,
+} from '@prisma/client'
 
 export type SearchQuery = {
-  age: string | null
-  size: string | null
-  energyLevel: string | null
-  independeceLevel: string | null
-  environmentType: string | null
+  age: Age | undefined
+  size: Size | undefined
+  energyLevel: EnergyLevel | undefined
+  independeceLevel: IndependenceLevel | undefined
+  environmentType: EnvironmentType | undefined
 }
 
 export interface PetRepository {
