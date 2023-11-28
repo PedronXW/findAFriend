@@ -1,4 +1,5 @@
-import { Pet, Prisma } from '@prisma/client'
+import { CreatePetDTO } from '@/dtos/pets/CreatePetDTO'
+import { Pet } from '@prisma/client'
 import { randomUUID } from 'crypto'
 import { PetRepository, SearchQuery } from '../pet-repository'
 
@@ -9,7 +10,7 @@ export class InMemoryPetRepository implements PetRepository {
     this.pets.push(newPet)
   }
 
-  async create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
+  async create(data: CreatePetDTO): Promise<Pet> {
     const pet = {
       id: randomUUID(),
       active: true,
@@ -32,10 +33,10 @@ export class InMemoryPetRepository implements PetRepository {
     return pet
   }
 
-  async findByCity(city: string): Promise<Pet[]> {
-    const pets = this.pets.filter((pet) => pet.address.includes(city))
+  async findById(id: string): Promise<Pet | null> {
+    const pets = this.pets.filter((pet) => (pet.id = id))
 
-    return pets
+    return pets[0]
   }
 
   async search(query: SearchQuery): Promise<Pet[]> {
@@ -45,8 +46,8 @@ export class InMemoryPetRepository implements PetRepository {
       if (query.energyLevel && pet.energyLevel !== query.energyLevel)
         return false
       if (
-        query.independeceLevel &&
-        pet.independenceLevel !== query.independeceLevel
+        query.independenceLevel &&
+        pet.independenceLevel !== query.independenceLevel
       )
         return false
       if (
